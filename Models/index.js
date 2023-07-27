@@ -1,48 +1,49 @@
-const cTable = require('console.table');
-const db = require('../db/connection.js');
+const db = require("../db/connection.js");
 
 class Data {
-    constructor () {
-        this.questionOne = '';
-    }
+  constructor(connection) {
+    this.connection = connection;
+  }
 
-    displayDepartments (data) {
-        db.query('SELECT * FROM department', (err, results) => {
-            if (err) {
-                console.log(err);
-            }
-            console.table(results);
-        })
-    }
+  displayDepartments() {
+    return this.connection.promise().query("SELECT * FROM DEPARTMENT");
+  }
 
-    displayRoles (data) {
-        db.query('SELECT * FROM role', (err, results) => {
-            if (err) {
-                console.log(err);
-            }
-            console.table(results);
-        })
-    }
+  displayRoles() {
+    return this.connection.promise().query("SELECT * FROM ROLE");
+  }
 
-    displayEmployees (data) {
-        db.query('SELECT * FROM employee', (err, results) => {
-            if (err) {
-                console.log(err);
-            }
-            console.table(results);
-            console.log('Department added to the employees_db database.')
-        })
-    }
+  displayEmployees() {
+    return this.connection.promise().query("SELECT * FROM EMPLOYEE");
+  }
 
-    addDepartment (data) {
-        console.log(data);
-        const sql = `UPDATE department SET name = ? WHERE id = ?`;
+  addDepartment(data) {
+    return this.connection
+      .promise()
+      .query(`INSERT INTO department (name) VALUES ('${data.newName}')`);
+  }
 
-    }
+  findDepartment(data) {
+    const name = data.department;
 
-    addRole (data) {
-        console.log(data);
-        const sql = `UPDATE department SET name = ? WHERE id = ?`;
+    return this.connection.promise().query(
+        `SELECT id FROM DEPARTMENT WHERE name = ?`,
+        name,
+        (err, result) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log('result',result);
+          }
+        }
+      );
+  }
 
-    }
+  updateRole(id, data) {
+    return this.connection.promise().query(
+      `INSERT INTO role (title, salary, department_id) VALUES ('${data.title}','${data.salary}','${id[0].id}')`
+    )
+  }
 }
+
+module.exports = new Data(db);
