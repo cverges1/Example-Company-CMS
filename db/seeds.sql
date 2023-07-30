@@ -7,16 +7,16 @@ VALUES (001, "Housekeeping"),
 INSERT INTO  role (id, title, salary, department_id)
 VALUES (001, "Room Attendant", 30000.00, 001),
        (002, "Room Inspector", 35000.00, 001),
-       (003, "Director of Housekeeping", 72000.00, 001),
+       (003, "Manager of Housekeeping", 72000.00, 001),
        (004, "Front Desk Agent", 33000.00, 002),
        (005, "Overnight Front Desk Agent", 34500.00, 002),
-       (006, "Director of Operations", 72500.00, 002),
+       (006, "Manager of Operations", 72500.00, 002),
        (007, "Phone Operator", 30500.00, 003),
        (008, "Food Runner", 27500.00, 003),
-       (009, "Director of Food and Beverage", 74000.00, 003),
+       (009, "Manager of Food and Beverage", 74000.00, 003),
        (010, "Security Gaurd", 34000.00, 004),
        (011, "Overnight Security Gaurd", 35500.00, 004),
-       (012, "Director of Security", 72500.00, 004);
+       (012, "Manager of Security", 72500.00, 004);
 
 INSERT INTO  employee (id, first_name, last_name, role_id, manager_id)
 VALUES (001, "Kathe", "Fitzsimons", 003, null),

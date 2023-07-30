@@ -3,6 +3,9 @@ const dataMananger = require("./Models/index");
 const cTable = require("console.table");
 const db = require("./db/connection.js");
 
+let employeeList = [];
+let roleList = [];
+
 const questions = [
   {
     type: "list",
@@ -47,7 +50,7 @@ const addRoleQuestions = [
   },
 ];
 
-const newEmployeeQuestions = [
+const addEmployeeQuestions = [
   {
     type: "input",
     name: "first",
@@ -67,6 +70,21 @@ const newEmployeeQuestions = [
     type: "input",
     name: "manager",
     message: "Who is the employee's manager?",
+  },
+];
+
+const updateEmployeeList = [
+  {
+    type: "list",
+    name: "employee",
+    message: "Which employee would you like to update?",
+    choices: employeeList,
+  },
+  {
+    type: "list",
+    name: "role",
+    message: "Which role would you like to assign them?",
+    choices: roleList,
   },
 ];
 
@@ -103,25 +121,56 @@ const init = () => {
         inquirer.prompt(addRoleQuestions).then((answers) => {
           dataMananger
             .findDepartment(answers)
-            .then(([rows]) => dataMananger.updateRole(rows, answers))
+            .then(([rows]) => dataMananger.addRole(rows, answers))
             .then(() => console.log("Successfully Added Role"))
             .then(() => init());
         });
       }
       if (answers.questionOne === "Add an Employee") {
-        inquirer.prompt(addRoleQuestions).then((answers) => {
-          dataMananger
-            .findDepartment(answers)
-            .then(([rows]) => dataMananger.updateRole(rows, answers))
-            .then(() => console.log("Successfully Added Role"))
-            .then(() => init());
+        inquirer.prompt(addEmployeeQuestions).then((answers) => {
+          dataMananger.findRole(answers).then(([role]) =>
+            dataMananger
+              .findManager(answers)
+              .then(([manager]) =>
+                dataMananger.addEmployee(answers, role, manager)
+              )
+              .then(() => console.log("Successfully Added Employee"))
+              .then(() => init())
+          );
+        });
+      }
+      if (answers.questionOne === "Update an Employee Role") {
+        employeeList = dataMananger
+          .displayEmployees()
+          .then(([rows]) => dataMananger.prepEmployeeForChoices(rows))
+          .then((choices) => {
+            updateEmployeeList[0].choices = choices;
+            return choices;
+          });
+        roleList = dataMananger
+          .displayRoles()
+          .then(([rows]) => dataMananger.prepRoleForChoices(rows))
+          .then((choices) => {
+            updateEmployeeList[1].choices = choices;
+            return choices;
+          });
+
+        Promise.all([employeeList, roleList]).then(() => {
+          inquirer.prompt(updateEmployeeList).then((answers) => {
+            dataMananger.findEmployee(answers.employee).then(([employee]) => {
+              dataMananger.findRole(answers.role).then(([role]) => dataMananger.updateEmployee(role,employee))
+              .then(() => console.log("Successfully Updated Employee"))
+              .then(() => init())
+            });
+            
+          })
         });
       }
     } else {
       console.log("Thanks! Goodbye!");
     }
   });
-  return;
+  return
 };
 
 init();
