@@ -33,6 +33,7 @@ class Data {
         name,
         (err, result) => {
           if (err) {
+            console.log()
             console.error(err);
           } else {
             console.log("result", result);
@@ -134,7 +135,6 @@ class Data {
 
       nameArr.push(employeeFull);
     }
-    // console.log(nameArr)
     return nameArr;
   }
 
@@ -145,7 +145,6 @@ class Data {
       let roleTitle = data[i].title;
       roleArr.push(roleTitle);
     }
-    // console.log(roleArr)
     return roleArr;
   }
 }
