@@ -89,8 +89,8 @@ class Data {
     return this.connection
       .promise()
       .query(
-        `SELECT id FROM EMPLOYEE WHERE first_name = ?`,
-        employeeFirst,
+        `SELECT id FROM EMPLOYEE WHERE last_name = ?`,
+        employeeLast,
         (err, result) => {
           if (err) {
             console.error(err);
@@ -121,7 +121,7 @@ class Data {
     return this.connection
     .promise()
     .query(
-      `UPDATE employee SET role_id = ${role[0].id} WHERE id =  ${employee[0].id}`
+      `UPDATE employee SET role_id = ${role[0].id} WHERE id = ${employee[0].id}`
     );
   }
 

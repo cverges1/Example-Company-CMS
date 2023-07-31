@@ -168,6 +168,7 @@ const init = () => {
       }
     } else {
       console.log("Thanks! Goodbye!");
+      process.exit();
     }
   });
   return
